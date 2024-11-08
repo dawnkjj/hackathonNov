@@ -1,4 +1,6 @@
-// Game variables - Syntax sisters
+//SYNTAX SISTERS - GAME BASED ON FITNESS AND WELLBEING
+
+// Variables for the game
 var athlete_x, athlete_y;
 var RaceFloor;
 var moveLeft = false, moveRight = false;
@@ -121,19 +123,21 @@ function draw() {
             break;
         }
     }
-
+//START CODE - CODE REFERENCE TAKEN BY AARON YEO - FROM COURSERA NOTES ITP1 
     // Apply gravity if athlete is not on a hurdle
     if (!isOnHurdle && athlete_y < RaceFloor) {
         athlete_y += 5;
     } else if (athlete_y >= RaceFloor) {
     }
-
+//END CODE - CODE REFERENCE TAKEN BY AARON YEO - FROM COURSERA NOTES ITP1 
+    
     // Control athlete's horizontal movement with speed and friction
     if (moveLeft) speed = max(-maxSpeed, speed - 0.5);
     if (moveRight) speed = min(maxSpeed, speed + 0.5);
     athlete_x += speed;
     speed *= friction;
 }
+
 
 // Draw the athlete (main character)
 function drawAthlete() {
@@ -201,6 +205,7 @@ function drawFinishLine() {
     }
 }
 
+//START CODE - CODE REFERENCE TAKEN BY AARON YEO - FROM COURSERA NOTES ITP1 
 // Control key behavior for movement
 function keyPressed() {
     // Left arrow code 
@@ -216,8 +221,9 @@ function keyReleased() {
     if (keyCode === 37) moveLeft = false;
     else if (keyCode === 39) moveRight = false;
 }
+//END CODE - CODE REFERENCE TAKEN BY AARON YEO - FROM COURSERA NOTES ITP1 
 
-// Initialize or reset game state for level 1
+// Initialise or reset game state for level 1
 function startGame() {
     level = 1;
     athlete_x = 50;
@@ -232,7 +238,7 @@ function startGame() {
     speed = 0;
 }
 
-// Initialize or reset game state to proceed to level 2
+// Initialise or reset game state to proceed to level 2
 function startLevel2() {
     athlete_x = 50;
     athlete_y = RaceFloor - 50; 
