@@ -1,8 +1,7 @@
 // Variables to store athlete
-var athlete_x;
-var athlete_y;
+var athlete_x, athlete_y;
 var RaceFloor;
-var moveLeft = false, moveRight = false, isFalling = false, isDropping = false;
+var moveLeft = false, moveRight = false;
 var items, burger, hurdles;
 var score, lifeCount;
 var speed = 0;   
@@ -57,24 +56,24 @@ function draw() {
     drawFinishLine();
 
     // Draw each hurdle on the track
-    for (var i = 0; i < hurdles.length; i++) {
+    for (let i = 0; i < hurdles.length; i++) {
         hurdles[i].draw();
     }
 
     // Check and draw items to be collected
-    for (var i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
         checkItem(items[i]);
         drawItem(items[i]);
     }
 
     // Draw each enemy and check for collision
-    for (var i = 0; i < burger.length; i++) {
+    for (let i = 0; i < burger.length; i++) {
         burger[i].draw();
         var isContact = burger[i].checkContact(athlete_x, athlete_y);
         if (isContact) {
             if (lifeCount > 0) {
                 lifeCount--;
-                startGame();  // Restart game if collision occurs
+                startGame();  // Restart game after collision
                 break;
             }
         }
@@ -85,7 +84,7 @@ function draw() {
         fill(255, 0, 0);
         textSize(40);
         textAlign(CENTER);
-        text("Game over. Press space to restart.", width / 2, height / 2);
+        text("Game over. Press space to restart the game.", width / 2, height / 2);
         if (keyIsPressed && keyCode === 32) {
             setup();
             startGame();
@@ -95,23 +94,17 @@ function draw() {
 
     // Display "You Win!" message when the finish line is reached
     if (athlete_x >= EndLine_x) {
-        fill(0, 255, 0);
+        fill(0, 0, 0);
         textSize(40);
         textAlign(CENTER, CENTER);
-        text("You Win!", width / 2, height / 2);
+        text("Well done, you won!", width / 2, height / 2);
         return;
     }
 
-    // Handle falling behavior
-    if (isFalling) {
-        athlete_y += 10;
-        checkDeath();
-        return;
-    }
 
     // Check if the athlete is on a hurdle
     var isOnHurdle = false;
-    for (var i = 0; i < hurdles.length; i++) {
+    for (let i = 0; i < hurdles.length; i++) {
         if (hurdles[i].checkCollision(athlete_x, athlete_y)) {
             isOnHurdle = true;
             break;
@@ -119,13 +112,10 @@ function draw() {
     }
 
     // Apply gravity if athlete is not on a hurdle
-    if (!isOnHurdle && athlete_y < ) {
+    if (!isOnHurdle && athlete_y < RaceFloor) {
         athlete_y += 5;
-        isDropping = true;
     } else if (athlete_y >= RaceFloor) {
-        isDropping = false;
     }
-
 
     // Control athlete's horizontal movement with speed and friction
     if (moveLeft) speed = max(-maxSpeed, speed - 0.5);
@@ -202,9 +192,9 @@ function drawFinishLine() {
 
 // Control key behavior for movement
 function keyPressed() {
-    if (keyCode === 37 && !isFalling) moveLeft = true;  // Left arrow
-    else if (keyCode === 39 && !isFalling) moveRight = true;  // Right arrow
-    if (keyCode === 38 && !isDropping && !isFalling) athlete_y -= 100;  // Up arrow for jump
+    if (keyCode === 37) moveLeft = true;  // Left arrow
+    else if (keyCode === 39) moveRight = true;  // Right arrow
+    if (keyCode === 38) athlete_y -= 120;  // Up arrow for jump
 }
 
 // Stop movement when keys are released
@@ -219,11 +209,11 @@ function startGame() {
     athlete_y = RaceFloor - 50; // Start slightly higher above the ground
 
     score = 0;
-    burger = [new Enemy(700, RaceFloor - 10, 200)];
+    burger = [new Enemy(700, RaceFloor - 10, 200), new Enemy(400, RaceFloor - 10, 200)];
     items = [{ x: 316, y: 430, isCollected: false }];
     hurdles = [createHurdle(150, 50), createHurdle(400, 50)];
 
-    moveLeft = moveRight = isFalling = isDropping = false;
+    moveLeft = moveRight = false;
     speed = 0;
 }
 
@@ -259,16 +249,6 @@ function drawItem(item) {
         textSize(10);
         textAlign(CENTER, CENTER);
         text("Protein", item.x + 15, item.y - 5);
-    }
-}
-
-// Check if the athlete has fallen off the screen and reduce lives if so
-function checkDeath() {
-    if (athlete_y >= height) {
-        if (lifeCount > 0) {
-            lifeCount--;
-            startGame();
-        }
     }
 }
 
