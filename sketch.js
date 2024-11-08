@@ -66,14 +66,14 @@ function draw() {
         drawItem(items[i]);
     }
 
-    // Draw each enemy and check for collision
+    // Draw each enemy and check for Impact
     for (let i = 0; i < burger.length; i++) {
         burger[i].draw();
         var isContact = burger[i].checkContact(athlete_x, athlete_y);
         if (isContact) {
             if (lifeCount > 0) {
                 lifeCount--;
-                startGame();  // Restart game after collision
+                startGame();  // Restart game after Impact
                 break;
             }
         }
@@ -105,7 +105,7 @@ function draw() {
     // Check if the athlete is on a hurdle
     var isOnHurdle = false;
     for (let i = 0; i < hurdles.length; i++) {
-        if (hurdles[i].checkCollision(athlete_x, athlete_y)) {
+        if (hurdles[i].checkImpact(athlete_x, athlete_y)) {
             isOnHurdle = true;
             break;
         }
@@ -236,6 +236,10 @@ function checkItem(item) {
 // Draw each collectible item
 function drawItem(item) {
     if (!item.isCollected) {
+        // Straw for protein shake
+        fill(110, 87,42);
+        rect(item.x+10, item.y -60,5,25);
+        
         fill(255, 165, 0);
         rect(item.x - 10, item.y - 30, 45, 40);
 
@@ -272,7 +276,7 @@ function createHurdle(x, width) {
             rect(this.x, this.y - this.height + 5, this.width, 5);
         },
 
-        checkCollision: function (athleteX, athleteY) {
+        checkImpact: function (athleteX, athleteY) {
             if (
                 athleteX + 20 > this.x &&
                 athleteX - 20 < this.x + this.width &&
@@ -312,7 +316,10 @@ function Enemy(x, y, range) {
 
         fill(210, 180, 140);
         arc(this.currentX, this.y - 20, 50, 30, PI, TWO_PI, CHORD);
-
+        
+        fill(250,12,20);
+        rect(this.currentX- 25, this.y -20,50,5,5);
+        
         fill(34, 139, 34);
         rect(this.currentX - 25, this.y - 15, 50, 5, 5);
 
