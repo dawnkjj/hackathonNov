@@ -1,15 +1,16 @@
-// Variables to store athlete
+// Game variables - Syntax sisters
 var athlete_x, athlete_y;
 var RaceFloor;
 var moveLeft = false, moveRight = false;
-var items, burger, hurdles;
+var protein_Shakes, burger, hurdles;
 var score, lifeCount;
 var speed = 0;   
 var maxSpeed = 5;       
 var friction = 0.9;     
 var EndLine_x = 950;  
+var level = 1;  // Game would start at level 1
 
-// Setup function to initialize canvas and start game
+// Setup function to start the game logic
 function setup() {
     createCanvas(1024, 576);
     RaceFloor = height * 3 / 4;
@@ -17,9 +18,13 @@ function setup() {
     startGame();
 }
 
-// Main draw function to render and update game elements every frame
+// Draw function for my game
 function draw() {
-    background(174, 209, 206);  // Background color
+    if (level === 1) {
+        background(174, 209, 206);  // Day sky for level 1
+    } else if (level === 2) {
+        background(20, 24, 82);  // Night sky for level 2
+    }
 
     // Draw the ground area for the track
     fill(178, 34, 34);
@@ -47,23 +52,24 @@ function draw() {
     text("START", 0, 0);
     pop();
 
-    drawScore();  // Display the score
-
-    // Draw the athlete character slightly above the ground
+    // Display the score of the gamei
+    drawScore();  
+    
+    // Draw the athlete
     drawAthlete();
 
-    // Draw the static finish line
+    // Draw the finishing line
     drawFinishLine();
 
-    // Draw each hurdle on the track
+    // Draw the hurdles on the track
     for (let i = 0; i < hurdles.length; i++) {
         hurdles[i].draw();
     }
 
-    // Check and draw items to be collected
-    for (let i = 0; i < items.length; i++) {
-        checkItem(items[i]);
-        drawItem(items[i]);
+    // Check and draw the protein shake to be collected 
+    for (let i = 0; i < protein_Shakes.length; i++) {
+        checkprotein_Shake(protein_Shakes[i]);
+        drawprotein_Shake(protein_Shakes[i]);
     }
 
     // Draw each enemy and check for Impact
@@ -79,12 +85,12 @@ function draw() {
         }
     }
 
-    // Check for game over
+    // Check for game over logic
     if (lifeCount < 1) {
         fill(255, 0, 0);
         textSize(40);
         textAlign(CENTER);
-        text("Game over. Press space to restart the game.", width / 2, height / 2);
+        text("Game over. Press space to restart the race.", width / 2, height / 2);
         if (keyIsPressed && keyCode === 32) {
             setup();
             startGame();
@@ -92,15 +98,20 @@ function draw() {
         return;
     }
 
-    // Display "You Win!" message when the finish line is reached
+    // Move to level 2 when the finish line is reached (from level 1)
     if (athlete_x >= EndLine_x) {
-        fill(0, 0, 0);
-        textSize(40);
-        textAlign(CENTER, CENTER);
-        text("Well done, you won!", width / 2, height / 2);
+        if (level === 1) {
+            level = 2;  // Proceed to level 2
+            startLevel2();
+        } else {
+            fill(0, 255, 0);
+            textSize(40);
+            textAlign(CENTER, CENTER);
+            text("Congratulations, you finished the game!", width / 2, height / 2);
+            noLoop();  // End the game when level 2 is completed
+        }
         return;
     }
-
 
     // Check if the athlete is on a hurdle
     var isOnHurdle = false;
@@ -128,31 +139,31 @@ function draw() {
 function drawAthlete() {
     const adjustedY = athlete_y - 30; // Position a bit higher from the ground
 
-    // Head
+    // Head of the athlete
     fill(210, 180, 140);
     ellipse(athlete_x, adjustedY - 70, 25, 30);
 
-    // Eyes
+    // Eyes of the athlete
     fill(0);
     ellipse(athlete_x - 5, adjustedY - 73, 4, 6);
     ellipse(athlete_x + 5, adjustedY - 73, 4, 6);
 
-    // Mouth
+    // Mouth of the athlete
     stroke(0);
     strokeWeight(1);
     line(athlete_x - 3, adjustedY - 65, athlete_x + 3, adjustedY - 65);
 
-    // Torso
+    // Torso of the athlete
     noStroke();
     fill(210, 180, 140);
     rect(athlete_x - 20, adjustedY - 55, 40, 45, 10);
 
-    // Pecs
+    // Pecs of the athlete
     fill(209, 164, 105);
     ellipse(athlete_x - 9, adjustedY - 47, 15, 10);
     ellipse(athlete_x + 9, adjustedY - 47, 15, 10);
 
-    // Abs
+    // Abs of the athlete
     fill(209, 164, 105);
     rect(athlete_x - 8, adjustedY - 40, 6, 8, 3);
     rect(athlete_x + 2, adjustedY - 40, 6, 8, 3);
@@ -161,14 +172,14 @@ function drawAthlete() {
     rect(athlete_x - 8, adjustedY - 20, 6, 8, 3);
     rect(athlete_x + 2, adjustedY - 20, 6, 8, 3);
 
-    // Arms
+    // Arms of the athlete
     fill(210, 180, 140);
     ellipse(athlete_x - 28, adjustedY - 35, 12, 35);
     ellipse(athlete_x + 28, adjustedY - 35, 12, 35);
     ellipse(athlete_x - 28, adjustedY - 10, 8, 20);
     ellipse(athlete_x + 28, adjustedY - 10, 8, 20);
 
-    // Legs
+    // Legs of the athlete
     rect(athlete_x - 12, adjustedY - 8, 8, 30, 5);
     rect(athlete_x + 4, adjustedY - 8, 8, 30, 5);
     fill(139, 69, 19);
@@ -192,9 +203,12 @@ function drawFinishLine() {
 
 // Control key behavior for movement
 function keyPressed() {
-    if (keyCode === 37) moveLeft = true;  // Left arrow
-    else if (keyCode === 39) moveRight = true;  // Right arrow
-    if (keyCode === 38) athlete_y -= 120;  // Up arrow for jump
+    // Left arrow code 
+    if (keyCode === 37) moveLeft = true; 
+    // Right arrow code
+    else if (keyCode === 39) moveRight = true;  
+    // Up arrow for jump
+    if (keyCode === 38) athlete_y -= 120;  
 }
 
 // Stop movement when keys are released
@@ -203,15 +217,30 @@ function keyReleased() {
     else if (keyCode === 39) moveRight = false;
 }
 
-// Initialize or reset game state
+// Initialize or reset game state for level 1
 function startGame() {
+    level = 1;
     athlete_x = 50;
-    athlete_y = RaceFloor - 50; // Start slightly higher above the ground
+    athlete_y = RaceFloor - 50; 
 
     score = 0;
     burger = [new Enemy(700, RaceFloor - 10, 200), new Enemy(400, RaceFloor - 10, 200)];
-    items = [{ x: 316, y: 430, isCollected: false }];
+    protein_Shakes = [{ x: 316, y: 430, isCollected: false }];
     hurdles = [createHurdle(150, 50), createHurdle(400, 50)];
+
+    moveLeft = moveRight = false;
+    speed = 0;
+}
+
+// Initialize or reset game state to proceed to level 2
+function startLevel2() {
+    athlete_x = 50;
+    athlete_y = RaceFloor - 50; 
+
+    score = 0;
+    burger = [new Enemy(750, RaceFloor - 10, 150), new Enemy(500, RaceFloor - 10, 200)]; // Modified positions for level 2
+    protein_Shakes = [{ x: 400, y: 430, isCollected: false }, { x: 600, y: 430, isCollected: false }];
+    hurdles = [createHurdle(250, 50), createHurdle(500, 50), createHurdle(750, 50)]; // Additional hurdle for level 2
 
     moveLeft = moveRight = false;
     speed = 0;
@@ -225,34 +254,34 @@ function drawScore() {
     text("Score: " + score, 50, 30);
 }
 
-// Check if the item is collected and increase score if it is
-function checkItem(item) {
-    if (!item.isCollected && dist(athlete_x, athlete_y, item.x, item.y) < 20) {
-        item.isCollected = true;
+// Check if the protein is collected and increase score (if true)
+function checkprotein_Shake(protein_Shake) {
+    if (!protein_Shake.isCollected && dist(athlete_x, athlete_y, protein_Shake.x, protein_Shake.y) < 20) {
+        protein_Shake.isCollected = true;
         score += 1;
     }
 }
 
-// Draw each collectible item
-function drawItem(item) {
-    if (!item.isCollected) {
-        // Straw for protein shake
-        fill(110, 87,42);
-        rect(item.x+10, item.y -60,5,25);
+// Draw each protein shake
+function drawprotein_Shake(protein_Shake) {
+    if (!protein_Shake.isCollected) {
+        // Straw for protein shake 
+        fill(110, 87, 42);
+        rect(protein_Shake.x + 10, protein_Shake.y - 60, 5, 25);
         
         fill(255, 165, 0);
-        rect(item.x - 10, item.y - 30, 45, 40);
+        rect(protein_Shake.x - 10, protein_Shake.y - 30, 45, 40);
 
         fill(100);
-        rect(item.x - 10, item.y - 35, 45, 5);
+        rect(protein_Shake.x - 10, protein_Shake.y - 35, 45, 5);
 
         fill(255);
-        rect(item.x - 6, item.y - 15, 40, 20);
+        rect(protein_Shake.x - 6, protein_Shake.y - 15, 40, 20);
 
         fill(0);
         textSize(10);
         textAlign(CENTER, CENTER);
-        text("Protein", item.x + 15, item.y - 5);
+        text("Protein", protein_Shake.x + 15, protein_Shake.y - 5);
     }
 }
 
@@ -294,7 +323,7 @@ function createHurdle(x, width) {
     };
 }
 
-// Enemy object with movement
+// Burger enemy object (burger) 
 function Enemy(x, y, range) {
     this.x = x;
     this.y = y;
@@ -317,8 +346,8 @@ function Enemy(x, y, range) {
         fill(210, 180, 140);
         arc(this.currentX, this.y - 20, 50, 30, PI, TWO_PI, CHORD);
         
-        fill(250,12,20);
-        rect(this.currentX- 25, this.y -20,50,5,5);
+        fill(250, 12, 20);
+        rect(this.currentX - 25, this.y - 20, 50, 5, 5);
         
         fill(34, 139, 34);
         rect(this.currentX - 25, this.y - 15, 50, 5, 5);
