@@ -32,11 +32,11 @@ function draw() {
         background(20, 24, 82);  // Night sky for level 2
     }
 
-    // Draw the ground area for the track
+    // Ground lane
     fill(178, 34, 34);
     rect(0, 432, 1024, 255);
 
-    // Draw lane lines for track lanes
+    // Track lanes
     stroke(255);
     strokeWeight(2);
     for (let i = 440; i < 576; i += 40) {
@@ -74,11 +74,9 @@ function draw() {
     // Draw the finishing line
     drawFinishLine();
 
-
     //draw the sun
-    
     sun(350, 100, 20, 70, 20, 70);
-
+    
     //draw clouds
     drawClouds(150);
     
@@ -87,31 +85,32 @@ function draw() {
         hurdles[i].draw();
     }
 
-    // Check and draw the protein shake to be collected 
+    // Code for the protein shake to be collected 
     for (let i = 0; i < protein_Shakes.length; i++) {
         checkprotein_Shake(protein_Shakes[i]);
         drawprotein_Shake(protein_Shakes[i]);
     }
 
-    // Draw each enemy and check for Impact
+    // Enemy checking for impact
     for (let i = 0; i < burger.length; i++) {
         burger[i].draw();
         var isContact = burger[i].checkContact(athlete_x, athlete_y);
         if (isContact) {
             if (lifeCount > 0) {
                 lifeCount--;
-                startGame();  // Restart game after Impact
+                //Restart the game (call the function)
+                startGame();  
                 break;
             }
         }
     }
 
-    // Check for game over logic
+    // REFERENCED FROM AROON'S YEO CODE (number of lifes) 
     if (lifeCount < 1) {
         fill(255, 0, 0);
         textSize(40);
         textAlign(CENTER);
-        text("Game over. Press space to restart the race.", width / 2, height / 2);
+        text("YOU DIED! Press SPACE to restart the dash.", width / 2, height / 2);
         if (keyIsPressed && keyCode === 32) {
             setup();
             startGame();
@@ -128,13 +127,14 @@ function draw() {
             fill(0, 255, 0);
             textSize(40);
             textAlign(CENTER, CENTER);
-            text("Congratulations, you finished the game!", width / 2, height / 2);
+            text("Congrats, you completed the dash!", width / 2, height / 2);
             noLoop();  // End the game when level 2 is completed
         }
         return;
     }
-
-    // Check if the athlete is on a hurdle
+    //END OF REFERENCE CODE 
+    
+    // Checking if the athlete is on a hurdle
     var isOnHurdle = false;
     for (let i = 0; i < hurdles.length; i++) {
         if (hurdles[i].checkImpact(athlete_x, athlete_y)) {
@@ -142,6 +142,7 @@ function draw() {
             break;
         }
     }
+    
 //START CODE - CODE REFERENCE TAKEN BY AARON YEO - FROM COURSERA NOTES ITP1 
     // Apply gravity if athlete is not on a hurdle
     if (!isOnHurdle && athlete_y < RaceFloor) {
@@ -160,7 +161,7 @@ function draw() {
 
 // Draw the athlete (main character)
 function drawAthlete() {
-    const adjustedY = athlete_y - 30; // Position a bit higher from the ground
+    const adjustedY = athlete_y - 30; //Position of the athelte is a bit higher from the ground
 
     // Head of the athlete
     fill(210, 180, 140);
@@ -224,7 +225,7 @@ function absAthlete(x1, x2, y1, y2, y3, sizeX, sizeY, abs){
     rect(x2, y3, sizeX, sizeY, abs);
 }
 
-// Draw the static finish line with a checkered pattern
+// Draw the static finish line with a squared pattern
 function drawFinishLine() {
     let squareSize = 20;
     let rows = 6;
@@ -270,12 +271,10 @@ function startGame() {
     speed = 0;
 }
 
-// Initialise or reset game state to proceed to level 2
+// Reset the game state to proceed to level 2
 function startLevel2() {
-    
     athlete_x = 50;
     athlete_y = RaceFloor - 50; 
-
     score = 0;
     burger = [new Enemy(750, RaceFloor - 10, 150), new Enemy(500, RaceFloor - 10, 200)]; // Modified positions for level 2
     protein_Shakes = [{ x: 600, y: 430, isCollected: false }, {x:260 , y:380 , isCollected: false}];
@@ -284,7 +283,7 @@ function startLevel2() {
     speed = 0;
 }
 
-// Display current score
+// Display the current score
 function drawScore() {
     fill(0);
     noStroke();
@@ -300,7 +299,7 @@ function checkprotein_Shake(protein_Shake) {
     }
 }
 
-// Draw each protein shake
+// Draw the protein shakes
 function drawprotein_Shake(protein_Shake) {
     if (!protein_Shake.isCollected) {
         // Straw for protein shake 
@@ -322,7 +321,7 @@ function drawprotein_Shake(protein_Shake) {
         text("Protein", protein_Shake.x + 15, protein_Shake.y - 5);
     }
 }
-
+//Code for the sun 
 function sun(x, y, sizeA, sizeB, sizeC, sizeD){
     haveSun = true;
     fill(random(200, 255), 255, 0);
@@ -330,7 +329,7 @@ function sun(x, y, sizeA, sizeB, sizeC, sizeD){
     
 }
 
-// Create a hurdle object
+// Code for the hurdle object
 function createHurdle(x, width) {
     return {
         x: x,
@@ -368,7 +367,7 @@ function createHurdle(x, width) {
     };
 }
 
-// Burger enemy object (burger) 
+// Code for the burger constructor 
 function Enemy(x, y, range) {
     this.x = x;
     this.y = y;
@@ -412,6 +411,7 @@ function Enemy(x, y, range) {
     };
 }
 
+//Code to draw the clouds of the game
 function drawClouds(y){
     for(var i = 0; i < clouds_xPos.length; i++){
         fill(255);
