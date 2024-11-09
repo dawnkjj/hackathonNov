@@ -1,4 +1,3 @@
-
 //SYNTAX SISTERS - GAME BASED ON FITNESS AND WELLBEING
 
 // Variables for the game
@@ -29,8 +28,31 @@ function draw() {
         background(20, 24, 82);  // Night sky for level 2
     }
 
-    //drawing the track
-    drawTrack();
+    // Draw the ground area for the track
+    fill(178, 34, 34);
+    rect(0, 432, 1024, 255);
+
+    // Draw lane lines for track lanes
+    stroke(255);
+    strokeWeight(2);
+    for (let i = 440; i < 576; i += 40) {
+        line(0, i, width, i);
+    }
+    noStroke();
+
+    // Draw start area
+    fill(255);
+    rect(0, 440, 35, 130);
+
+    // Display start word text vertically in the start area
+    push();
+    translate(25, 505);
+    rotate(-HALF_PI);
+    fill(0);
+    textSize(23);
+    textAlign(CENTER, CENTER);
+    text("START", 0, 0);
+    pop();
 
     // Display the score of the gamei
     drawScore();  
@@ -125,7 +147,7 @@ function drawAthlete() {
     fill(210, 180, 140);
     ellipse(athlete_x, adjustedY - 70, 25, 30);
 
-// Eyes of the athlete
+    // Eyes of the athlete
     fill(0);
     ellipse(athlete_x - 5, adjustedY - 73, 4, 6);
     ellipse(athlete_x + 5, adjustedY - 73, 4, 6);
@@ -146,89 +168,39 @@ function drawAthlete() {
     ellipse(athlete_x + 9, adjustedY - 47, 15, 10);
 
     // Abs of the athlete
-    absAthlete(athlete_x - 8, athlete_x + 2, adjustedY - 40, adjustedY - 30, adjustedY - 20, 6, 8, 3);
+    fill(209, 164, 105);
+    rect(athlete_x - 8, adjustedY - 40, 6, 8, 3);
+    rect(athlete_x + 2, adjustedY - 40, 6, 8, 3);
+    rect(athlete_x - 8, adjustedY - 30, 6, 8, 3);
+    rect(athlete_x + 2, adjustedY - 30, 6, 8, 3);
+    rect(athlete_x - 8, adjustedY - 20, 6, 8, 3);
+    rect(athlete_x + 2, adjustedY - 20, 6, 8, 3);
 
     // Arms of the athlete
-    armsAthlete(athlete_x - 28, athlete_x + 28, adjustedY - 35, adjustedY - 10, 12, 35, 8, 20);
+    fill(210, 180, 140);
+    ellipse(athlete_x - 28, adjustedY - 35, 12, 35);
+    ellipse(athlete_x + 28, adjustedY - 35, 12, 35);
+    ellipse(athlete_x - 28, adjustedY - 10, 8, 20);
+    ellipse(athlete_x + 28, adjustedY - 10, 8, 20);
 
     // Legs of the athlete
-    legsAthlete(athlete_x - 12, athlete_x + 4, athlete_x - 8, athlete_x + 8, adjustedY - 8, adjustedY + 20, 8, 30, 5, 7, 15);
-}
-
-//legs of the athlete
-function legsAthlete(x1, x2, x3, x4, y1, y2, sizeA, sizeB, sizeC, sizeD, sizeE){
-    rect(x1, y1, sizeA, sizeB, sizeC);
-    rect(x2, y1, sizeA, sizeB, sizeC);
+    rect(athlete_x - 12, adjustedY - 8, 8, 30, 5);
+    rect(athlete_x + 4, adjustedY - 8, 8, 30, 5);
     fill(139, 69, 19);
-    ellipse(x3, y2, sizeD, sizeE);
-    ellipse(x4, y2, sizeD, sizeE);
-}
-
-//arms of the athlete
-function armsAthlete(x1, x2, y1, y2, sizeA, sizeB, sizeC, sizeD){
-    fill(210, 180, 140);
-    ellipse(x1, y1, sizeA, sizeB);
-    ellipse(x2, y1, sizeA, sizeB);
-    ellipse(x1, y2, sizeC, sizeD);
-    ellipse(x2, y2, sizeC, sizeD);
-}
-
-//abs of the athlete
-function absAthlete(x1, x2, y1, y2, y3, sizeX, sizeY, abs){
-    rect(x1, y1, sizeX, sizeY, abs);
-    rect(x2, y1, sizeX, sizeY, abs);
-    rect(x1, y2, sizeX, sizeY, abs);
-    rect(x2, y2, sizeX, sizeY, abs);
-    rect(x1, y3, sizeX, sizeY, abs);
-    rect(x2, y3, sizeX, sizeY, abs);
-}
-
-//draw the track
-function drawTrack(){
-    // Draw the ground area for the track
-    fill(178, 34, 34);
-    rect(0, 432, 1024, 255);
-
-    // Draw lane lines for track lanes
-    stroke(255);
-    strokeWeight(2);
-    for (let i = 440; i < 576; i += 40) {
-        line(0, i, width, i);
-    }
-    noStroke();
-
-    // Draw start area
-    fill(255);
-    rect(0, 440, 35, 130);
-
-    // Display start word text vertically in the start area
-    push();
-    translate(25, 505);
-    rotate(-HALF_PI);
-    fill(0);
-    textSize(23);
-    textAlign(CENTER, CENTER);
-    text("START", 0, 0);
-    pop();
+    ellipse(athlete_x - 8, adjustedY + 20, 7, 15);
+    ellipse(athlete_x + 8, adjustedY + 20, 7, 15);
 }
 
 // Draw the static finish line with a checkered pattern
 function drawFinishLine() {
-    let size = 20;
-    let numRows = 6;
-    let numCols = Math.ceil(130 / size);
+    let squareSize = 20;
+    let rows = 6;
+    let cols = Math.ceil(130 / squareSize);
 
-    for (var r = 0; r < numRows; r++){
-        for(var c = 0; c < numCols; c++){
-            if((r + c) % 2 === 0){
-                fill(0);
-            }
-            else{
-                fill(255);
-            }
-            let x = EndLine_x + c * size;
-            let y = RaceFloor - (numRows - r) * size;
-            rect(x, y, size, size); 
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            fill((row + col) % 2 === 0 ? 0 : 255);
+            rect(EndLine_x + col * squareSize, RaceFloor - (rows - row) * squareSize, squareSize, squareSize);
         }
     }
 }
@@ -267,32 +239,17 @@ function startGame() {
 }
 
 // Initialise or reset game state to proceed to level 2
-function startLevel2(){
+function startLevel2() {
     athlete_x = 50;
-    athlete_y = RaceFloor = 50;
+    athlete_y = RaceFloor - 50; 
+
     score = 0;
+    burger = [new Enemy(750, RaceFloor - 10, 150), new Enemy(500, RaceFloor - 10, 200)]; // Modified positions for level 2
+    protein_Shakes = [{ x: 400, y: 430, isCollected: false }, { x: 600, y: 430, isCollected: false }];
+    hurdles = [createHurdle(250, 50), createHurdle(500, 50), createHurdle(750, 50)]; // Additional hurdle for level 2
+
+    moveLeft = moveRight = false;
     speed = 0;
-    moveLeft = false;
-    moveRight = false;
-
-    //place enemies for level 2
-    burger = [
-        new Enemy(750, RaceFloor - 10, 150),
-        new Enemy(500, RaceFloor - 10, 200)
-    ];
-
-    //place protein shakes for level 2
-    protein_Shakes = [
-        {x: 400, y: 430, isCollected: false},
-        {x: 600, y: 430, isCollected: false}
-    ];
-
-    //place hurdles for level 2
-    hurdles = [
-        createHurdle(250, 50),
-        createHurdle(500, 50),
-        createHurdle(750, 50)
-    ];
 }
 
 // Display current score
@@ -335,38 +292,41 @@ function drawprotein_Shake(protein_Shake) {
 }
 
 // Create a hurdle object
-function createHurdle(x, width){
-    let hurdle = {
+function createHurdle(x, width) {
+    return {
         x: x,
-        y: RaceFloor, 
+        y: RaceFloor,
         width: width,
         height: 30,
 
-        draw: function(){
-            //draw side posts
+        draw: function () {
             fill(60);
             rect(this.x, this.y - this.height, 5, this.height);
             rect(this.x + this.width - 5, this.y - this.height, 5, this.height);
 
-            //draw top bar
             fill(255);
             rect(this.x, this.y - this.height, this.width, 5);
 
-            //draw red line on top bar
             fill(255, 0, 0);
             rect(this.x, this.y - this.height + 5, this.width, 5);
         },
 
-        //function to check if the athlete hits the hurdle
-        checkImpact: function(athleteX, athleteY){
-            if(athleteX > this.x - 20 && athleteX < this.x + this.width + 20 && athleteY >= this.y - this.height){
+        checkImpact: function (athleteX, athleteY) {
+            if (
+                athleteX + 20 > this.x &&
+                athleteX - 20 < this.x + this.width &&
+                athleteY >= this.y - this.height
+            ) {
+                if (athleteX < this.x) {
+                    athlete_x = this.x - 20;
+                } else if (athleteX > this.x + this.width) {
+                    athlete_x = this.x + this.width + 20;
+                }
                 return true;
             }
             return false;
         }
     };
-
-    return hurdle;
 }
 
 // Burger enemy object (burger) 
@@ -376,12 +336,14 @@ function Enemy(x, y, range) {
     this.range = range;
     this.currentX = x;
     this.inc = 1;
+    this.openMouth = true;
 
     this.update = function () {
         this.currentX += this.inc;
-        if(this.currentX >= this.x + this.range || this.currentX < this.x){
-            this.inc *= -1; //to reverse the direction
-        }
+        if (this.currentX >= this.x + this.range) this.inc = -1;
+        else if (this.currentX < this.x) this.inc = 1;
+        
+        this.openMouth = !this.openMouth;
     };
 
     this.draw = function () {
@@ -407,7 +369,6 @@ function Enemy(x, y, range) {
     };
 
     this.checkContact = function (gc_x, gc_y) {
-        let distance = dist(gc_x, gc_y, this.currentX, this.y);
-        return distance < 20;
+        return dist(gc_x, gc_y, this.currentX, this.y) < 20;
     };
 }
