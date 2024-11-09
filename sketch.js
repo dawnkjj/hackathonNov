@@ -32,6 +32,7 @@ function draw()
         background(20, 24, 82);  // Night sky for level 2
     }
 
+
     //drawing the track
     drawTrack();
 
@@ -43,6 +44,12 @@ function draw()
 
     // Draw the finishing line
     drawFinishLine();
+
+    //Draw bird
+    drawBird();
+
+    // //Draw Snow
+    // drawSnowFlake();
 
     // Draw the hurdles on the track
     for (let i = 0; i < hurdles.length; i++)
@@ -73,7 +80,7 @@ function draw()
         }
     }
 
-    // Check for game over logic
+    // REFERENCED; Check for game over logic
     if (lifeCount < 1)
     {
         fill(255, 0, 0);
@@ -100,7 +107,7 @@ function draw()
             fill(0, 255, 0);
             textSize(40);
             textAlign(CENTER, CENTER);
-            text("Congratulations, you finished the game!", width / 2, height / 2);
+            text("Congrats, you completed the race!", width / 2, height / 2);
             noLoop();  // End the game when level 2 is completed
         }
         return;
@@ -231,7 +238,7 @@ function drawTrack()
     fill(0);
     textSize(23);
     textAlign(CENTER, CENTER);
-    text("START", 0, 0);
+    text("S T A R T", 0, 0);
     pop();
 }
 
@@ -332,7 +339,7 @@ function drawScore()
     fill(0);
     noStroke();
     textSize(20);
-    text("Score: " + score, 50, 30);
+    text("Score : " + score, 50, 30);
 }
 
 // Check if the protein is collected and increase score (if true)
@@ -369,7 +376,41 @@ function drawprotein_Shake(protein_Shake)
         text("Protein", protein_Shake.x + 15, protein_Shake.y - 5);
     }
 }
+function drawBird(flying_Bird)
+{
+    fill(57, 84, 84);
+    ellipse(200, 100, 30, 30);
 
+    fill(57, 84, 84);
+    ellipse(180, 90, 20, 20);
+
+    fill(57, 84, 84);
+    triangle(191, 90, 210, 90, 200, 60);
+
+    fill(57, 84, 84);
+    triangle(191, 110, 210, 100, 200, 140);
+
+    fill(199, 117, 24);
+    triangle(170, 84, 170, 95, 160, 87);
+
+}
+
+// function drawSnowFlake(snow_Flake)
+// {
+//     for (var i = 0; i < 10; i++)
+//     {
+//         for (var j = 0; j < 10; j++)
+//         {
+//             fill(0);
+
+//             x = frameCount % 200;
+//             ellipse(random(i) * x, random(j) * x, 2, 2);
+
+
+//         }
+//     }
+
+// }
 // Create a hurdle object
 function createHurdle(x, width)
 {
